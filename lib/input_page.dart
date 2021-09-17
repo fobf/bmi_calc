@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'icon_content.dart';
+import 'reusable_card.dart';
 
 const double bottomContainerHeight = 80;
 const activeCardColor = Color(0xFF1D1E33);
+const inactiveCardColor = Color(0xFF111328);
+const bottomContainerColor = Color(0xFFEB1555);
+enum Gender { male, female }
 
 class InputPage extends StatefulWidget {
   @override
@@ -10,6 +15,8 @@ class InputPage extends StatefulWidget {
 }
 
 class _InputPageState extends State<InputPage> {
+  Gender? selectedGender;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,20 +29,40 @@ class _InputPageState extends State<InputPage> {
             child: Row(
               children: [
                 Expanded(
-                  child: ReusableCard(
-                    color: activeCardColor,
-                    cardChild: IconContent(
-                      icon: FontAwesomeIcons.mars,
-                      label: "MALE",
+                  child: GestureDetector(
+                    onTap: () => {
+                      setState(() {
+                        selectedGender = Gender.male;
+
+                        // updateColor(Gender.male);
+                      }),
+                    },
+                    child: ReusableCard(
+                      color: selectedGender == Gender.male
+                          ? activeCardColor
+                          : inactiveCardColor,
+                      cardChild: IconContent(
+                        icon: FontAwesomeIcons.mars,
+                        label: "MALE",
+                      ),
                     ),
                   ),
                 ),
                 Expanded(
-                  child: ReusableCard(
-                    color: activeCardColor,
-                    cardChild: IconContent(
-                      icon: FontAwesomeIcons.venus,
-                      label: "FEMALE",
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selectedGender = Gender.female;
+                      });
+                    },
+                    child: ReusableCard(
+                      color: selectedGender == Gender.female
+                          ? activeCardColor
+                          : inactiveCardColor,
+                      cardChild: IconContent(
+                        icon: FontAwesomeIcons.venus,
+                        label: "FEMALE",
+                      ),
                     ),
                   ),
                 ),
@@ -65,60 +92,12 @@ class _InputPageState extends State<InputPage> {
           ),
           Container(
             width: double.infinity,
-            color: Color(0xFFEB1555),
+            color: bottomContainerColor,
             margin: EdgeInsets.only(top: 10),
             height: bottomContainerHeight,
           ),
         ],
       ),
-    );
-  }
-}
-
-class IconContent extends StatelessWidget {
-  IconContent({this.icon, this.label = 'Icon Text'});
-  final IconData? icon;
-  final String label;
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        FaIcon(icon,
-            //FontAwesomeIcons.mars,
-            size: 80),
-        // SizedBox(height: 15),
-        Text(
-          label,
-          // 'MALE',
-          style: TextStyle(
-            fontSize: 20.0,
-            color: Color(0xFF8D8E96),
-          ),
-        )
-      ],
-    );
-  }
-}
-
-class ReusableCard extends StatelessWidget {
-  ReusableCard({
-    required this.color,
-    this.cardChild,
-  });
-
-  final Color color;
-  final Widget? cardChild;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.all(15),
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: cardChild != null ? cardChild : null, // handle here
     );
   }
 }
